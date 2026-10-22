@@ -1,0 +1,306 @@
+{
+  "info": {
+    "_postman_id": "a9d3e8f1-8f4b-4b82-96cb-8b5e5f32a762",
+    "name": "Task API - Week 2 (TASK-WD-201)",
+    "description": "Comprehensive Postman collection for Task API built with Express, MongoDB, and Mongoose for Week 2 (TASK-WD-201). Covers all CRUD operations, pagination, filtering, searching, sorting, and error handling.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "taskId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        },
+        "description": "Check if API server is running."
+      },
+      "response": []
+    },
+    {
+      "name": "1. Tasks CRUD",
+      "item": [
+        {
+          "name": "Create Task (Valid)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data._id) {",
+                  "    pm.collectionVariables.set('taskId', res.data._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Complete Week 2 REST API\",\n  \"description\": \"Design Express endpoints, Mongoose schema, validation and pagination\",\n  \"status\": \"in-progress\",\n  \"priority\": \"high\",\n  \"dueDate\": \"2026-10-30T00:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"]
+            },
+            "description": "Creates a new task in MongoDB."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Tasks (Default Pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"]
+            },
+            "description": "Fetches all tasks with default pagination (limit 10, page 1)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tasks with Pagination (Page 1, Limit 5)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks?page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
+              ]
+            },
+            "description": "Pagination parameters (page & limit)."
+          },
+          "response": []
+        },
+        {
+          "name": "Filter Tasks by Status & Priority",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks?status=in-progress&priority=high",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"],
+              "query": [
+                { "key": "status", "value": "in-progress" },
+                { "key": "priority", "value": "high" }
+              ]
+            },
+            "description": "Filter by status (pending, in-progress, completed) and priority (low, medium, high)."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Tasks by Title",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks?search=REST",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"],
+              "query": [
+                { "key": "search", "value": "REST" }
+              ]
+            },
+            "description": "Case-insensitive regex search on task title."
+          },
+          "response": []
+        },
+        {
+          "name": "Sort Tasks (-createdAt)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks?sort=-createdAt",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"],
+              "query": [
+                { "key": "sort", "value": "-createdAt" }
+              ]
+            },
+            "description": "Sort tasks in descending order of creation date."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Task by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "{{taskId}}"]
+            },
+            "description": "Fetches a specific task by its MongoDB ObjectId."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Task (PUT/PATCH)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"priority\": \"medium\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "{{taskId}}"]
+            },
+            "description": "Updates fields of an existing task with schema re-validation."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Task by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "{{taskId}}"]
+            },
+            "description": "Deletes a task by MongoDB ObjectId."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Error Handling & Validation Tests",
+      "item": [
+        {
+          "name": "Create Task - Missing Title (400 Validation Error)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Title is deliberately missing to test validation\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"]
+            },
+            "description": "Verifies that title requirement validation triggers 400 with descriptive error message."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Task - Invalid Enum Value (400 Error)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Invalid enum test\",\n  \"status\": \"not-a-valid-status\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"]
+            },
+            "description": "Verifies that invalid enum value for status triggers 400."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Task - Invalid MongoDB ID (400 Error)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/invalid-object-id-123",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "invalid-object-id-123"]
+            },
+            "description": "Verifies that non-hexadecimal MongoDB ObjectId triggers 400 Bad Request."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Task - Non-Existent ID (404 Error)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/507f1f77bcf86cd799439011",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "507f1f77bcf86cd799439011"]
+            },
+            "description": "Verifies that valid ID with no document triggers 404 Not Found."
+          },
+          "response": []
+        },
+        {
+          "name": "Route Not Found (404 Error)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/undefined-endpoint",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "undefined-endpoint"]
+            },
+            "description": "Tests centralized 404 middleware for nonexistent routes."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
