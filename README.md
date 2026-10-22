@@ -186,9 +186,10 @@ Server will run on `http://localhost:5000`.
 
 ---
 
-## 📮 Postman Collection
+## 📮 Postman Documentation & Collection
 
-The repository includes a ready-to-use Postman collection: **`Task_API.postman_collection.json`**.
+- **Live Public Documentation**: [View API Documentation on Postman](https://documenter.getpostman.com/view/48133336/2sBYHUSKs5)
+- **Exported Collection File**: [`Task_API.postman_collection.json`](./Task_API.postman_collection.json)
 
 ### How to use in Postman:
 1. Open **Postman**.
